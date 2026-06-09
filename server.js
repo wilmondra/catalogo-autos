@@ -207,8 +207,8 @@ app.post("/api/favoritos", requireLogin, (req, res) => {
     }
 });
 
-// ── Iniciar servidor ──────────────────────────────────────────────────────────
-const PUERTO = 3000;
-app.listen(PUERTO, () => {
-    console.log(`🚗 Luxury Motors corriendo en http://localhost:${PUERTO}`);
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`🚗 Luxury Motors corriendo en el puerto ${PORT}`);
 });
