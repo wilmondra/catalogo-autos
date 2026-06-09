@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxury Motors</title>
+    <link rel="stylesheet" href="trabajo.css">
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="logo">
+            <h1>Luxury Motors</h1>
+            <p>Diseño • Potencia • Tecnología</p>
+        </div>
+
+        <nav class="nav">
+            <a href="#inicio">Inicio</a>
+            <a href="#catalogo-sec">Catálogos</a>
+            <a href="#nosotros">Nosotros</a>
+            <a href="#contacto">Contacto</a>
+        </nav>
+
+        <div class="usuario-menu">
+            <div class="icono-usuario">
+                <img src="img/Nissan Leaf.jpeg" alt="Usuario" width="50" height="50">
+            </div>
+            <span id="nombre-usuario">Usuario</span>
+            <button onclick="window.location.href='/logout'">Cerrar Sesión</button>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero" id="inicio">
+        <div class="hero-text">
+            <span class="hero-badge">Colección 2026</span>
+            <h2>La nueva generación de autos modernos</h2>
+            <p>
+                Descubre vehículos diseñados para ofrecer velocidad,
+                comodidad y una experiencia premium en cada viaje.
+            </p>
+            <div class="hero-buttons">
+                <a href="catalogo_nissan.html" class="btn">Explorar Nissan</a>
+                <a href="#nosotros" class="btn btn-outline">Conocer más</a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat"><strong>8+</strong><span>Modelos Nissan</span></div>
+                <div class="stat"><strong>30+</strong><span>Años de historia</span></div>
+                <div class="stat"><strong>100%</strong><span>Calidad premium</span></div>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="img/Toyota supra.jpg" alt="Auto deportivo">
+        </div>
+    </section>
+
+    <!-- INFO CARDS -->
+    <section class="info-section">
+        <div class="info-card">
+            <div class="info-icon">🏎️</div>
+            <h3>Autos Deportivos</h3>
+            <p>Vehículos con gran potencia, diseño elegante y excelente rendimiento en pista.</p>
+        </div>
+        <div class="info-card">
+            <div class="info-icon">⚡</div>
+            <h3>Vehículos Eléctricos</h3>
+            <p>Tecnología avanzada enfocada en eficiencia energética y sostenibilidad.</p>
+        </div>
+        <div class="info-card">
+            <div class="info-icon">🚙</div>
+            <h3>SUV Modernas</h3>
+            <p>Espacio, seguridad y comodidad para todo tipo de terrenos y viajes.</p>
+        </div>
+        <div class="info-card">
+            <div class="info-icon">🏆</div>
+            <h3>Ediciones Especiales</h3>
+            <p>Modelos de edición limitada con acabados exclusivos y máximo rendimiento.</p>
+        </div>
+    </section>
+
+    <!-- CATÁLOGOS / MARCAS -->
+    <section class="catalogo-sec" id="catalogo-sec">
+        <div class="section-header">
+            <h2>Nuestros Catálogos</h2>
+            <p>Explora nuestra colección por marca y categoría</p>
+        </div>
+
+        <div class="marcas-grid">
+            <a href="catalogo_nissan.html" class="marca-card nissan-card">
+                <div class="marca-overlay"></div>
+                <div class="marca-info">
+                    <h3>Nissan Performance</h3>
+                    <p>GT-R, Skyline, Serie Z, Silvia</p>
+                    <span class="marca-badge">8 modelos</span>
+                </div>
+            </a>
+            <div class="marca-card pronto-card">
+                <div class="marca-overlay"></div>
+                <div class="marca-info">
+                    <h3>Toyota Sports</h3>
+                    <p>Supra, GR86, Celica</p>
+                    <span class="marca-badge proximamente">Próximamente</span>
+                </div>
+            </div>
+            <div class="marca-card pronto-card2">
+                <div class="marca-overlay"></div>
+                <div class="marca-info">
+                    <h3>Honda JDM</h3>
+                    <p>NSX, Civic Type-R, S2000</p>
+                    <span class="marca-badge proximamente">Próximamente</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DESTACADOS -->
+    <section class="productos" id="destacados">
+        <div class="section-header">
+            <h2>Vehículos Destacados</h2>
+            <p>Selección especial de nuestra colección</p>
+        </div>
+        <div class="cards-row">
+            <div class="card">
+                <div class="card-badge">SUV</div>
+                <img src="img/Nissan X-Trail.jpeg" alt="Nissan X-Trail">
+                <div class="card-body">
+                    <h4>Nissan X-Trail</h4>
+                    <p>SUV moderno con excelente manejo y comodidad familiar.</p>
+                    <button onclick="toggleDetalle('X-Trail', this)">Ver especificaciones</button>
+                    <div id="X-Trail" class="detalle">
+                        <div class="spec-row"><span>Motor</span><strong>2.5L 4 cilindros</strong></div>
+                        <div class="spec-row"><span>Potencia</span><strong>181 HP</strong></div>
+                        <div class="spec-row"><span>Velocidad máx.</span><strong>195 km/h</strong></div>
+                        <div class="spec-row"><span>Precio base</span><strong>$31,000</strong></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-badge card-badge-green">Eléctrico</div>
+                <img src="img/Nissan Leaf.jpeg" alt="Nissan Leaf">
+                <div class="card-body">
+                    <h4>Nissan Leaf</h4>
+                    <p>100% eléctrico y eficiente para tu movilidad diaria.</p>
+                    <button onclick="toggleDetalle('Leaf', this)">Ver especificaciones</button>
+                    <div id="Leaf" class="detalle">
+                        <div class="spec-row"><span>Motor</span><strong>Eléctrico 150 kW</strong></div>
+                        <div class="spec-row"><span>Potencia</span><strong>214 HP</strong></div>
+                        <div class="spec-row"><span>Autonomía</span><strong>385 km</strong></div>
+                        <div class="spec-row"><span>Precio base</span><strong>$28,040</strong></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-badge card-badge-red">Deportivo</div>
+                <img src="img/Toyota supra.jpg" alt="Toyota Supra">
+                <div class="card-body">
+                    <h4>Toyota Supra</h4>
+                    <p>Deportivo elegante con alto rendimiento y herencia icónica.</p>
+                    <button onclick="toggleDetalle('supra', this)">Ver especificaciones</button>
+                    <div id="supra" class="detalle">
+                        <div class="spec-row"><span>Motor</span><strong>3.0L Turbo 6 cil.</strong></div>
+                        <div class="spec-row"><span>Potencia</span><strong>382 HP</strong></div>
+                        <div class="spec-row"><span>Velocidad máx.</span><strong>250 km/h</strong></div>
+                        <div class="spec-row"><span>Precio base</span><strong>$56,000</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NOSOTROS -->
+    <section class="nosotros-section" id="nosotros">
+        <div class="nosotros-content">
+            <div class="nosotros-text">
+                <span class="section-eyebrow">Sobre nosotros</span>
+                <h2>¿Por qué Luxury Motors?</h2>
+                <p>Somos un catálogo especializado en los vehículos más icónicos del mundo automotriz, con enfoque especial en la cultura JDM y los deportivos japoneses.</p>
+                <ul class="nosotros-list">
+                    <li>✅ Información técnica verificada y actualizada</li>
+                    <li>✅ Especializados en la historia Nissan y JDM</li>
+                    <li>✅ Contenido para entusiastas y coleccionistas</li>
+                    <li>✅ Actualizaciones constantes del catálogo</li>
+                </ul>
+            </div>
+            <div class="nosotros-stats-grid">
+                <div class="stat-box"><div class="stat-num">8+</div><div class="stat-label">Modelos en catálogo</div></div>
+                <div class="stat-box"><div class="stat-num">30+</div><div class="stat-label">Años cubiertos</div></div>
+                <div class="stat-box"><div class="stat-num">3</div><div class="stat-label">Marcas próximas</div></div>
+                <div class="stat-box"><div class="stat-num">100%</div><div class="stat-label">Pasión automotriz</div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section class="contacto-section" id="contacto">
+        <div class="section-header section-header-light">
+            <h2>Contáctanos</h2>
+            <p>¿Tienes alguna pregunta o sugerencia para nuestro catálogo?</p>
+        </div>
+        <div class="contacto-grid">
+            <div class="contacto-info">
+                <div class="contacto-item">
+                    <span class="contacto-icon">📧</span>
+                    <div>
+                        <strong>Email</strong>
+                        <p>info@luxurymotors.com</p>
+                    </div>
+                </div>
+                <div class="contacto-item">
+                    <span class="contacto-icon">📱</span>
+                    <div>
+                        <strong>WhatsApp</strong>
+                        <p>+505 8888-0000</p>
+                    </div>
+                </div>
+                <div class="contacto-item">
+                    <span class="contacto-icon">📍</span>
+                    <div>
+                        <strong>Ubicación</strong>
+                        <p>Masaya, Nicaragua</p>
+                    </div>
+                </div>
+            </div>
+            <form class="contacto-form" onsubmit="enviarMensaje(event)">
+                <input type="text" id="nombre-contacto" placeholder="Tu nombre" required>
+                <input type="email" id="email-contacto" placeholder="Tu correo" required>
+                <textarea id="msg-contacto" rows="4" placeholder="Tu mensaje..." required></textarea>
+                <button type="submit">Enviar mensaje</button>
+                <p id="form-success" style="display:none;color:#4caf50;margin-top:10px;font-weight:bold;">✅ ¡Mensaje enviado! Gracias por contactarnos.</p>
+            </form>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-top">
+            <div class="footer-brand">
+                <h3>Luxury Motors</h3>
+                <p>El catálogo premium de autos deportivos más completo de habla hispana.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Navegación</h4>
+                <a href="#inicio">Inicio</a>
+                <a href="catalogo_nissan.html">Catálogo Nissan</a>
+                <a href="#nosotros">Nosotros</a>
+                <a href="#contacto">Contacto</a>
+            </div>
+            <div class="footer-links">
+                <h4>Catálogos</h4>
+                <a href="catalogo_nissan.html">Nissan Performance</a>
+                <a href="#">Toyota Sports (pronto)</a>
+                <a href="#">Honda JDM (pronto)</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Luxury Motors | Desarrollado por Wilmer Mondragón</p>
+        </div>
+    </footer>
+
+    <script>
+    // Cargar nombre de usuario
+    fetch("/api/usuario")
+        .then(r => r.json())
+        .then(d => {
+            document.getElementById("nombre-usuario").textContent = d.nombre || d.usuario;
+        })
+        .catch(() => {});
+
+    // Toggle detalles de card
+    function toggleDetalle(id, btn) {
+        const detalle = document.getElementById(id);
+        const abierto = detalle.classList.contains("abierto");
+        // Cerrar todos
+        document.querySelectorAll(".detalle").forEach(d => d.classList.remove("abierto"));
+        document.querySelectorAll(".card-body button").forEach(b => b.textContent = "Ver especificaciones");
+        // Abrir si estaba cerrado
+        if (!abierto) {
+            detalle.classList.add("abierto");
+            btn.textContent = "Ocultar";
+        }
+    }
+
+    // Simulación de envío de formulario
+    function enviarMensaje(e) {
+        e.preventDefault();
+        const btn = e.target.querySelector("button");
+        btn.textContent = "Enviando...";
+        btn.disabled = true;
+        setTimeout(() => {
+            document.getElementById("form-success").style.display = "block";
+            e.target.reset();
+            btn.textContent = "Enviar mensaje";
+            btn.disabled = false;
+        }, 1200);
+    }
+
+    // Smooth scroll para nav links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href === '#') return;
+            e.preventDefault();
+            document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+    </script>
+</body>
+</html>

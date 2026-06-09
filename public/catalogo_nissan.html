@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nissan Performance | Luxury Motors</title>
+    <link rel="stylesheet" href="catalogo_nissan.css">
+</head>
+<body>
+
+<header>
+    <div class="header-top">
+        <a href="/inicio" class="back-link">← Volver al Inicio</a>
+        <div class="header-user">
+            <span id="header-usuario">Cargando...</span>
+            <a href="/logout" class="logout-link">Salir</a>
+        </div>
+    </div>
+    <h1>Nissan Performance Collection</h1>
+    <p>La historia de los deportivos más icónicos de Nissan</p>
+
+    <!-- FILTROS -->
+    <div class="filtros">
+        <button class="filtro-btn activo" data-cat="todos">Todos</button>
+        <button class="filtro-btn" data-cat="superdeportivo">Superdeportivo</button>
+        <button class="filtro-btn" data-cat="deportivo">Deportivo</button>
+        <button class="filtro-btn" data-cat="clasico">Clásico JDM</button>
+        <button class="filtro-btn" data-cat="drift">Drift</button>
+    </div>
+
+    <!-- BÚSQUEDA -->
+    <div class="busqueda-box">
+        <input type="text" id="busqueda" placeholder="🔍  Buscar modelo...">
+    </div>
+</header>
+
+<!-- CONTADOR -->
+<div class="contador-bar">
+    <span id="contador-texto">Cargando modelos...</span>
+    <span id="favoritos-count">❤️ <span id="fav-num">0</span> favoritos</span>
+</div>
+
+<!-- CATÁLOGO -->
+<section class="catalogo" id="catalogo-grid">
+    <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Cargando catálogo...</p>
+    </div>
+</section>
+
+<!-- MODAL DE DETALLES -->
+<div id="modal" class="modal-overlay" onclick="cerrarModal(event)">
+    <div class="modal-box">
+        <button class="modal-close" onclick="document.getElementById('modal').style.display='none'">✕</button>
+        <img id="modal-img" src="" alt="">
+        <div class="modal-content">
+            <span id="modal-categoria" class="modal-badge"></span>
+            <h2 id="modal-nombre"></h2>
+            <p id="modal-descripcion"></p>
+            <div class="modal-specs">
+                <div class="modal-spec"><span>Motor</span><strong id="modal-motor"></strong></div>
+                <div class="modal-spec"><span>Potencia</span><strong id="modal-potencia"></strong></div>
+                <div class="modal-spec"><span>Vel. máxima</span><strong id="modal-velocidad"></strong></div>
+                <div class="modal-spec"><span>Años</span><strong id="modal-año"></strong></div>
+                <div class="modal-spec"><span>Precio aprox.</span><strong id="modal-precio"></strong></div>
+            </div>
+            <button id="modal-fav-btn" class="modal-fav-btn" onclick="toggleFavModal()">❤️ Agregar a favoritos</button>
+        </div>
+    </div>
+</div>
+
+<!-- SECCIÓN FAVORITOS -->
+<section class="favoritos-section" id="favoritos-section" style="display:none">
+    <h2>Mis Favoritos</h2>
+    <div id="favoritos-grid" class="favoritos-grid"></div>
+</section>
+
+<div class="volver">
+    <a href="/inicio">← Volver al Inicio</a>
+</div>
+
+<footer class="cat-footer">
+    <p>© 2026 Luxury Motors | Wilmer Mondragón</p>
+</footer>
+
+<script src="catalogo_nissan.js"></script>
+</body>
+</html>
