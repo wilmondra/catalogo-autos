@@ -133,14 +133,143 @@ app.get("/api/usuario", requireLogin, (req, res) => {
 // Autos
 app.get("/api/autos", requireLogin, (req, res) => {
     res.json([
-        { id: "gtr_r35", nombre: "Nissan GT-R R35" },
-        { id: "gtr_r34", nombre: "Nissan Skyline GT-R R34" },
-        { id: "gtr_r33", nombre: "Nissan Skyline GT-R R33" },
-        { id: "gtr_r32", nombre: "Nissan Skyline GT-R R32" },
-        { id: "400z", nombre: "Nissan Z (2023)" },
-        { id: "370z", nombre: "Nissan 370Z" },
-        { id: "350z", nombre: "Nissan 350Z" },
-        { id: "silvia_s15", nombre: "Nissan Silvia S15" }
+        {
+            id: "gtr_r35",
+            nombre: "Nissan GT-R R35",
+            categoria: "Superdeportivo",
+            descripcion: "El Godzilla moderno de Nissan.",
+            potencia: "565 HP",
+            velocidad: "315 km/h",
+            año: "2024",
+            motor: "3.8L V6 Twin Turbo",
+            img: "imagenes/nissan/gtr_r35.jpg"
+        },
+        {
+            id: "gtr_r34",
+            nombre: "Nissan Skyline GT-R R34",
+            categoria: "JDM Legend",
+            descripcion: "Uno de los deportivos japoneses más icónicos.",
+            potencia: "280 HP",
+            velocidad: "266 km/h",
+            año: "2002",
+            motor: "RB26DETT",
+            img: "imagenes/nissan/gtr_r34.jpg"
+        },
+        {
+            id: "gtr_r33",
+            nombre: "Nissan Skyline GT-R R33",
+            categoria: "JDM Legend",
+            descripcion: "Potencia y tecnología AWD japonesa.",
+            potencia: "280 HP",
+            velocidad: "252 km/h",
+            año: "1998",
+            motor: "RB26DETT",
+            img: "imagenes/nissan/gtr_r33.jpg"
+        },
+        {
+            id: "gtr_r32",
+            nombre: "Nissan Skyline GT-R R32",
+            categoria: "JDM Classic",
+            descripcion: "El auto que inició la leyenda Godzilla.",
+            potencia: "280 HP",
+            velocidad: "250 km/h",
+            año: "1994",
+            motor: "RB26DETT",
+            img: "imagenes/nissan/gtr_r32.jpg"
+        },
+        {
+            id: "400z",
+            nombre: "Nissan Z (2023)",
+            categoria: "Deportivo",
+            descripcion: "La nueva generación de la serie Z.",
+            potencia: "400 HP",
+            velocidad: "250 km/h",
+            año: "2023",
+            motor: "3.0L Twin Turbo V6",
+            img: "imagenes/nissan/400z.jpg"
+        },
+        {
+            id: "370z",
+            nombre: "Nissan 370Z",
+            categoria: "Deportivo",
+            descripcion: "Potencia y diversión en estado puro.",
+            potencia: "332 HP",
+            velocidad: "250 km/h",
+            año: "2020",
+            motor: "3.7L V6",
+            img: "imagenes/nissan/370z.jpg"
+        },
+        {
+            id: "350z",
+            nombre: "Nissan 350Z",
+            categoria: "Deportivo",
+            descripcion: "Uno de los deportivos más populares de Nissan.",
+            potencia: "306 HP",
+            velocidad: "250 km/h",
+            año: "2008",
+            motor: "3.5L V6",
+            img: "imagenes/nissan/350z.jpg"
+        },
+        {
+            id: "silvia_s15",
+            nombre: "Nissan Silvia S15",
+            categoria: "JDM Drift",
+            descripcion: "Leyenda japonesa del drift.",
+            potencia: "250 HP",
+            velocidad: "245 km/h",
+            año: "2002",
+            motor: "SR20DET",
+            img: "imagenes/nissan/s15.jpg"
+        }
+    ]);
+});
+
+app.get("/api/autos/honda", requireLogin, (req, res) => {
+    res.json([
+        {
+            id: "nsx",
+            nombre: "Honda NSX",
+            categoria: "Superdeportivo",
+            descripcion: "El legendario superdeportivo japonés desarrollado con tecnología VTEC.",
+            potencia: "270 HP",
+            velocidad: "270 km/h",
+            año: "1990",
+            motor: "3.0L V6 VTEC",
+            img: "imagenes/honda/nsx.jpg"
+        },
+        {
+            id: "civic_type_r",
+            nombre: "Honda Civic Type R",
+            categoria: "Type R",
+            descripcion: "Uno de los hatchbacks de tracción delantera más rápidos del mundo.",
+            potencia: "315 HP",
+            velocidad: "275 km/h",
+            año: "2023",
+            motor: "2.0L Turbo VTEC",
+            img: "imagenes/honda/civic_type_r.jpg"
+        },
+        {
+            id: "s2000",
+            nombre: "Honda S2000",
+            categoria: "Roadster",
+            descripcion: "Deportivo de alto rendimiento con motor F20C y tecnología VTEC.",
+            potencia: "240 HP",
+            velocidad: "250 km/h",
+            año: "2008",
+            motor: "2.0L F20C",
+            img: "imagenes/honda/s2000.jpg"
+        },
+        {
+            id: "integra_type_r",
+            nombre: "Honda Integra Type R",
+            categoria: "Type R",
+            descripcion: "Uno de los deportivos compactos más icónicos de Honda.",
+            potencia: "197 HP",
+            velocidad: "233 km/h",
+            año: "2001",
+            motor: "1.8L VTEC",
+            img: "imagenes/honda/integra_type_r.jpg"
+        }
     ]);
 });
 
