@@ -142,7 +142,7 @@ app.get("/api/autos", requireLogin, (req, res) => {
             velocidad: "315 km/h",
             año: "2024",
             motor: "3.8L V6 Twin Turbo",
-            img: "imagenes/nissan/gtr_r35.jpg"
+            img: "img/nissan/Nissan GTR R35.jpeg"
         },
         {
             id: "gtr_r34",
@@ -153,7 +153,7 @@ app.get("/api/autos", requireLogin, (req, res) => {
             velocidad: "266 km/h",
             año: "2002",
             motor: "RB26DETT",
-            img: "imagenes/nissan/gtr_r34.jpg"
+            img: "img/nissan/Nissan GTR R34.jpeg"
         },
         {
             id: "gtr_r33",
@@ -164,7 +164,7 @@ app.get("/api/autos", requireLogin, (req, res) => {
             velocidad: "252 km/h",
             año: "1998",
             motor: "RB26DETT",
-            img: "imagenes/nissan/gtr_r33.jpg"
+            img: "img/nissan/Nissan GTR R33.jpeg"
         },
         {
             id: "gtr_r32",
@@ -175,7 +175,7 @@ app.get("/api/autos", requireLogin, (req, res) => {
             velocidad: "250 km/h",
             año: "1994",
             motor: "RB26DETT",
-            img: "imagenes/nissan/gtr_r32.jpg"
+            img: "img/nissan/Nissan GTR R32.jpeg"
         },
         {
             id: "400z",
@@ -186,7 +186,7 @@ app.get("/api/autos", requireLogin, (req, res) => {
             velocidad: "250 km/h",
             año: "2023",
             motor: "3.0L Twin Turbo V6",
-            img: "imagenes/nissan/400z.jpg"
+            img: "img/nissan/Nissan 350Z.jpeg"
         },
         {
             id: "370z",
@@ -197,7 +197,7 @@ app.get("/api/autos", requireLogin, (req, res) => {
             velocidad: "250 km/h",
             año: "2020",
             motor: "3.7L V6",
-            img: "imagenes/nissan/370z.jpg"
+            img: "img/nissan/Nissan 370Z.jpeg"
         },
         {
             id: "350z",
@@ -208,7 +208,7 @@ app.get("/api/autos", requireLogin, (req, res) => {
             velocidad: "250 km/h",
             año: "2008",
             motor: "3.5L V6",
-            img: "imagenes/nissan/350z.jpg"
+            img: "img/nissan/Nissan Silvia 15.jpeg"
         },
         {
             id: "silvia_s15",
@@ -219,7 +219,7 @@ app.get("/api/autos", requireLogin, (req, res) => {
             velocidad: "245 km/h",
             año: "2002",
             motor: "SR20DET",
-            img: "imagenes/nissan/s15.jpg"
+            img: "img/nissan/Nissan Z (2023).jpeg"
         }
     ]);
 });
