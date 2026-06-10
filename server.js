@@ -235,7 +235,7 @@ app.get("/api/autos/honda", requireLogin, (req, res) => {
             velocidad: "270 km/h",
             año: "1990",
             motor: "3.0L V6 VTEC",
-            img: "imagenes/honda/nsx.jpg"
+            img: "/img/Honda NSX.jpeg "
         },
         {
             id: "civic_type_r",
@@ -246,7 +246,7 @@ app.get("/api/autos/honda", requireLogin, (req, res) => {
             velocidad: "275 km/h",
             año: "2023",
             motor: "2.0L Turbo VTEC",
-            img: "imagenes/honda/civic_type_r.jpg"
+            img: "/img/Honda Civic Type R.jpeg "
         },
         {
             id: "s2000",
@@ -257,7 +257,7 @@ app.get("/api/autos/honda", requireLogin, (req, res) => {
             velocidad: "250 km/h",
             año: "2008",
             motor: "2.0L F20C",
-            img: "imagenes/honda/s2000.jpg"
+            img: "/img/Honda S2000.jpeg"
         },
         {
             id: "integra_type_r",
@@ -268,7 +268,7 @@ app.get("/api/autos/honda", requireLogin, (req, res) => {
             velocidad: "233 km/h",
             año: "2001",
             motor: "1.8L VTEC",
-            img: "imagenes/honda/integra_type_r.jpg"
+            img: "/img/Honda Integra Type R.jpeg"
         }
     ]);
 });
