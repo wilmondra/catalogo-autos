@@ -640,60 +640,99 @@ footer {
 
 @media screen and (max-width: 768px) {
 
-    nav,
-    .navbar {
+    .header {
         flex-direction: column;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .nav-links {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
-    }
-
-    .hero,
-    .hero-content {
-        width: 100%;
         padding: 20px;
+        gap: 15px;
         text-align: center;
     }
 
-    .hero h1 {
-        font-size: 2.2rem;
-        line-height: 1.2;
-    }
-
-    .hero p {
-        font-size: 1rem;
-    }
-
-    .stats {
-        display: flex;
+    .nav {
         flex-wrap: wrap;
         justify-content: center;
         gap: 15px;
     }
 
-    .features-grid,
-    .catalogos-grid,
-    .autos-grid,
-    .marca-grid {
-        display: grid;
+    .usuario-menu {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .hero {
+        flex-direction: column;
+        padding: 30px 20px;
+        text-align: center;
+    }
+
+    .hero-text h2 {
+        font-size: 2.2rem;
+    }
+
+    .hero-stats {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .info-section {
+        flex-direction: column;
+        padding: 30px 20px;
+    }
+
+    .marcas-grid {
         grid-template-columns: 1fr;
-        gap: 20px;
+        padding: 0 20px;
+    }
+
+    .cards-row {
+        padding: 0 20px;
+    }
+
+    .card {
+        width: 100%;
+        max-width: 350px;
+    }
+
+    .nosotros-content {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .nosotros-stats-grid {
+        width: 100%;
+        grid-template-columns: 1fr;
+    }
+
+    .contacto-grid {
+        flex-direction: column;
+    }
+
+    .footer-top {
+        flex-direction: column;
+        gap: 25px;
+        padding: 30px 20px;
+    }
+
+    .section-header {
+        padding: 30px 20px;
     }
 
     img {
         max-width: 100%;
         height: auto;
     }
+}
 
-    .container {
-        width: 100%;
-        max-width: 100%;
-        padding: 0 15px;
+@media screen and (max-width: 768px) {
+
+    .usuario-menu span {
+        display: none;
+    }
+
+    .logo h1 {
+        font-size: 22px;
+    }
+
+    .nav a {
+        font-size: 13px;
     }
 }
