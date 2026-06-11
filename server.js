@@ -87,7 +87,7 @@ app.get("/", (req, res) => {
 // Página de login
 app.get("/login", (req, res) => {
     if (req.session.usuario) return res.redirect("/entrada");
-    res.sendFile(path.join(__dirname, "public", "login.html"));
+    res.sendFile(path.join(__dirname, "public", "login1.html"));
 });
 
 // POST Registro
