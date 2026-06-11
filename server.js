@@ -1,4 +1,5 @@
 require("dotenv").config();
+const bcrypt = require("bcrypt");
 
 const express = require("express");
 const mysql = require("mysql2");
@@ -65,6 +66,17 @@ function crearTablas() {
             UNIQUE KEY unique_fav (usuario_id, auto_id)
         )
     `);
+    db.query(`
+        CREATE TABLE usuarios (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            nombre VARCHAR(100) NOT NULL,
+            apellido VARCHAR(100) NOT NULL,
+            usuario VARCHAR(50) UNIQUE NOT NULL,
+            correo VARCHAR(150) UNIQUE NOT NULL,
+            contraseña VARCHAR(255) NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    `);
 }
 
 // ── Middleware login ──
@@ -91,23 +103,53 @@ app.get("/login", (req, res) => {
 });
 
 // POST Registro
-app.post("/registro", (req, res) => {
+app.post("/registro", async (req, res) => {
     const { nombre, apellido, usuario, correo, contraseña } = req.body;
 
     if (!nombre || !apellido || !usuario || !correo || !contraseña) {
-        return res.status(400).json({ error: "Completa todos los campos." });
+        return res.status(400).json({
+            error: "Completa todos los campos."
+        });
     }
 
-    const sql = "INSERT INTO usuarios (nombre, apellido, usuario, correo, contraseña) VALUES (?, ?, ?, ?, ?)";
-    db.query(sql, [nombre, apellido, usuario, correo, contraseña], (error) => {
-        if (error) {
-            if (error.code === "ER_DUP_ENTRY") {
-                return res.status(409).json({ error: "El usuario o correo ya está registrado." });
+    try {
+        const hash = await bcrypt.hash(contraseña, 10);
+
+        const sql = `
+            INSERT INTO usuarios
+            (nombre, apellido, usuario, correo, contraseña)
+            VALUES (?, ?, ?, ?, ?)
+        `;
+
+        db.query(
+            sql,
+            [nombre, apellido, usuario, correo, hash],
+            (error) => {
+                if (error) {
+                    if (error.code === "ER_DUP_ENTRY") {
+                        return res.status(409).json({
+                            error: "El usuario o correo ya está registrado."
+                        });
+                    }
+
+                    return res.status(500).json({
+                        error: "Error en el servidor."
+                    });
+                }
+
+                return res.json({
+                    success: true
+                });
             }
-            return res.status(500).json({ error: "Error en el servidor." });
-        }
-        return res.json({ success: true });
-    });
+        );
+
+    } catch (error) {
+        console.error(error);
+
+        return res.status(500).json({
+            error: "Error al procesar la contraseña."
+        });
+    }
 });
 
 // POST Login
@@ -115,21 +157,47 @@ app.post("/login", (req, res) => {
     const { usuario, contraseña } = req.body;
 
     if (!usuario || !contraseña) {
-        return res.status(400).json({ error: "Completa todos los campos." });
+        return res.status(400).json({
+            error: "Completa todos los campos."
+        });
     }
 
-    const sql = "SELECT * FROM usuarios WHERE usuario = ? AND contraseña = ?";
-    db.query(sql, [usuario, contraseña], (error, resultados) => {
-        if (error) return res.status(500).json({ error: "Error servidor" });
+    const sql = "SELECT * FROM usuarios WHERE usuario = ?";
 
-        if (resultados.length > 0) {
-            req.session.usuario = resultados[0].usuario;
-            req.session.usuario_id = resultados[0].id;
-            req.session.nombre = resultados[0].nombre || resultados[0].usuario;
-            return res.json({ success: true });
-        } else {
-            return res.status(401).json({ error: "Usuario o contraseña incorrectos." });
+    db.query(sql, [usuario], async (error, resultados) => {
+
+        if (error) {
+            return res.status(500).json({
+                error: "Error servidor"
+            });
         }
+
+        if (resultados.length === 0) {
+            return res.status(401).json({
+                error: "Usuario o contraseña incorrectos."
+            });
+        }
+
+        const usuarioDB = resultados[0];
+
+        const coincide = await bcrypt.compare(
+            contraseña,
+            usuarioDB.contraseña
+        );
+
+        if (!coincide) {
+            return res.status(401).json({
+                error: "Usuario o contraseña incorrectos."
+            });
+        }
+
+        req.session.usuario = usuarioDB.usuario;
+        req.session.usuario_id = usuarioDB.id;
+        req.session.nombre = usuarioDB.nombre || usuarioDB.usuario;
+
+        return res.json({
+            success: true
+        });
     });
 });
 
