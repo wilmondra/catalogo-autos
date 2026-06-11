@@ -1,0 +1,188 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-image: url("img/Toyota supra.jpg");
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+}
+
+.overlay {
+    width: 100%;
+    min-height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.registro-box {
+    width: 400px;
+    padding: 40px;
+    background: white;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+.registro-box h1 {
+    color: #1a1a1a;
+    margin-bottom: 8px;
+    font-size: 28px;
+}
+
+.registro-box > p {
+    color: gray;
+    margin-bottom: 22px;
+    font-size: 14px;
+}
+
+/* Mensajes de error y éxito */
+.error-msg {
+    background: #fff0f0;
+    border: 1px solid #e74c3c;
+    color: #c0392b;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    text-align: left;
+}
+
+.success-msg {
+    background: #f0fff4;
+    border: 1px solid #27ae60;
+    color: #1e8449;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    text-align: left;
+}
+
+/* Fila doble nombre/apellido */
+.input-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.input-row .input-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+/* Grupos de input */
+.input-group {
+    position: relative;
+    margin-bottom: 14px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 13px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: border-color 0.2s;
+    outline: none;
+}
+
+.input-group input:focus {
+    border-color: #8b5e34;
+}
+
+.password-group input {
+    padding-right: 45px;
+}
+
+/* Botón mostrar/ocultar contraseña */
+.toggle-pass {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #888;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+}
+
+.toggle-pass:hover {
+    color: #8b5e34;
+}
+
+/* Barra de fortaleza de contraseña */
+.strength-bar {
+    display: flex;
+    gap: 5px;
+    margin: -8px 0 6px;
+}
+
+.strength-bar span {
+    flex: 1;
+    height: 4px;
+    border-radius: 2px;
+    background: #eee;
+    transition: background 0.3s;
+}
+
+.strength-label {
+    font-size: 12px;
+    text-align: left;
+    margin-bottom: 10px;
+    min-height: 16px;
+    color: #aaa;
+    transition: color 0.3s;
+}
+
+/* Botón principal */
+#btn-registro {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 8px;
+    background: #1a1a1a;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background 0.3s, transform 0.1s;
+    margin-top: 4px;
+}
+
+#btn-registro:hover:not(:disabled) {
+    background: #444;
+    transform: translateY(-1px);
+}
+
+#btn-registro:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Texto inferior */
+.hint-text {
+    margin-top: 18px;
+    font-size: 12px;
+    color: #aaa;
+}
+
+.hint-text a {
+    color: #8b5e34;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.hint-text a:hover {
+    text-decoration: underline;
+}

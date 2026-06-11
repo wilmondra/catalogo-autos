@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxury Motors - Registro</title>
+    <link rel="stylesheet" href="registro.css">
+</head>
+<body>
+
+    <div class="overlay">
+        <div class="registro-box">
+            <h1>Luxury Motors</h1>
+            <p>Crea tu cuenta</p>
+
+            <div id="error-msg" class="error-msg" style="display:none;"></div>
+            <div id="success-msg" class="success-msg" style="display:none;"></div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <input type="text" id="nombre" placeholder="Nombre" required autocomplete="given-name">
+                </div>
+                <div class="input-group">
+                    <input type="text" id="apellido" placeholder="Apellido" required autocomplete="family-name">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="usuario" placeholder="Usuario" required autocomplete="username">
+            </div>
+
+            <div class="input-group">
+                <input type="email" id="correo" placeholder="Correo electrónico" required autocomplete="email">
+            </div>
+
+            <div class="input-group password-group">
+                <input type="password" id="contraseña" placeholder="Contraseña" required autocomplete="new-password"
+                    oninput="verificarFuerza(this.value)">
+                <button type="button" class="toggle-pass" onclick="togglePass('contraseña')" title="Mostrar/ocultar contraseña">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="strength-bar">
+                <span id="bar1"></span>
+                <span id="bar2"></span>
+                <span id="bar3"></span>
+                <span id="bar4"></span>
+            </div>
+            <p class="strength-label" id="strength-label"></p>
+
+            <div class="input-group password-group">
+                <input type="password" id="confirmar" placeholder="Confirmar contraseña" required autocomplete="new-password">
+                <button type="button" class="toggle-pass" onclick="togglePass('confirmar')" title="Mostrar/ocultar contraseña">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                </button>
+            </div>
+
+            <button id="btn-registro" onclick="registrar()">Crear Cuenta</button>
+
+            <p class="hint-text">¿Ya tienes cuenta? <a href="/login">Inicia sesión</a></p>
+        </div>
+    </div>
+
+    <script>
+    function togglePass(id) {
+        const input = document.getElementById(id);
+        input.type = input.type === "password" ? "text" : "password";
+    }
+
+    function verificarFuerza(valor) {
+        const bars = [
+            document.getElementById("bar1"),
+            document.getElementById("bar2"),
+            document.getElementById("bar3"),
+            document.getElementById("bar4")
+        ];
+        const label = document.getElementById("strength-label");
+        const colores = ["#eee", "#e74c3c", "#e67e22", "#f1c40f", "#27ae60"];
+        const textos = ["", "Muy débil", "Débil", "Media", "Fuerte"];
+
+        let puntaje = 0;
+        if (valor.length >= 8) puntaje++;
+        if (/[A-Z]/.test(valor)) puntaje++;
+        if (/[0-9]/.test(valor)) puntaje++;
+        if (/[^A-Za-z0-9]/.test(valor)) puntaje++;
+
+        bars.forEach((bar, i) => {
+            bar.style.background = i < puntaje ? colores[puntaje] : "#eee";
+        });
+
+        label.textContent = valor.length > 0 ? textos[puntaje] : "";
+        label.style.color = colores[puntaje];
+    }
+
+    async function registrar() {
+        const nombre = document.getElementById("nombre").value.trim();
+        const apellido = document.getElementById("apellido").value.trim();
+        const usuario = document.getElementById("usuario").value.trim();
+        const correo = document.getElementById("correo").value.trim();
+        const contraseña = document.getElementById("contraseña").value;
+        const confirmar = document.getElementById("confirmar").value;
+        const btn = document.getElementById("btn-registro");
+        const errorDiv = document.getElementById("error-msg");
+        const successDiv = document.getElementById("success-msg");
+
+        errorDiv.style.display = "none";
+        successDiv.style.display = "none";
+
+        if (!nombre || !apellido || !usuario || !correo || !contraseña || !confirmar) {
+            mostrarError("Por favor completa todos los campos.");
+            return;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(correo)) {
+            mostrarError("Ingresa un correo electrónico válido.");
+            return;
+        }
+
+        if (contraseña.length < 8) {
+            mostrarError("La contraseña debe tener al menos 8 caracteres.");
+            return;
+        }
+
+        if (contraseña !== confirmar) {
+            mostrarError("Las contraseñas no coinciden.");
+            return;
+        }
+
+        btn.textContent = "Registrando...";
+        btn.disabled = true;
+
+        try {
+            const res = await fetch("/registro", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ nombre, apellido, usuario, correo, contraseña })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                successDiv.textContent = "¡Cuenta creada exitosamente! Redirigiendo...";
+                successDiv.style.display = "block";
+                btn.textContent = "¡Listo!";
+                setTimeout(() => { window.location.href = "/login"; }, 2000);
+            } else {
+                mostrarError(data.error || "Error al crear la cuenta. Intenta de nuevo.");
+                btn.textContent = "Crear Cuenta";
+                btn.disabled = false;
+            }
+        } catch (e) {
+            mostrarError("Error de conexión. Intenta de nuevo.");
+            btn.textContent = "Crear Cuenta";
+            btn.disabled = false;
+        }
+    }
+
+    function mostrarError(msg) {
+        const div = document.getElementById("error-msg");
+        div.textContent = msg;
+        div.style.display = "block";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") registrar();
+        });
+    });
+    </script>
+</body>
+</html>
