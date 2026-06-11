@@ -35,9 +35,9 @@ const db = mysql.createConnection({
 // Conectar DB
 db.connect((error) => {
     if (error) {
-        console.log(" Error al conectar con MySQL:", error.message);
+        console.log("Error al conectar con MySQL:", error.message);
     } else {
-        console.log(" Conectado a MySQL - luxurymotorss");
+        console.log("Conectado a MySQL - luxurymotorss");
         crearTablas();
     }
 });
@@ -47,9 +47,11 @@ function crearTablas() {
     db.query(`
         CREATE TABLE IF NOT EXISTS usuarios (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            usuario VARCHAR(50) UNIQUE NOT NULL,
-            contraseña VARCHAR(255) NOT NULL,
             nombre VARCHAR(100),
+            apellido VARCHAR(100),
+            usuario VARCHAR(50) UNIQUE NOT NULL,
+            correo VARCHAR(150) UNIQUE NOT NULL,
+            contraseña VARCHAR(255) NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     `);
@@ -76,13 +78,39 @@ function requireLogin(req, res, next) {
 
 // ── RUTAS ──
 
-// Login page
+// Página de inicio → Registro
 app.get("/", (req, res) => {
     if (req.session.usuario) return res.redirect("/entrada");
-    res.sendFile(path.join(__dirname, "public", "login1.html"));
+    res.sendFile(path.join(__dirname, "public", "registro.html"));
 });
 
-// Login
+// Página de login
+app.get("/login", (req, res) => {
+    if (req.session.usuario) return res.redirect("/entrada");
+    res.sendFile(path.join(__dirname, "public", "login.html"));
+});
+
+// POST Registro
+app.post("/registro", (req, res) => {
+    const { nombre, apellido, usuario, correo, contraseña } = req.body;
+
+    if (!nombre || !apellido || !usuario || !correo || !contraseña) {
+        return res.status(400).json({ error: "Completa todos los campos." });
+    }
+
+    const sql = "INSERT INTO usuarios (nombre, apellido, usuario, correo, contraseña) VALUES (?, ?, ?, ?, ?)";
+    db.query(sql, [nombre, apellido, usuario, correo, contraseña], (error) => {
+        if (error) {
+            if (error.code === "ER_DUP_ENTRY") {
+                return res.status(409).json({ error: "El usuario o correo ya está registrado." });
+            }
+            return res.status(500).json({ error: "Error en el servidor." });
+        }
+        return res.json({ success: true });
+    });
+});
+
+// POST Login
 app.post("/login", (req, res) => {
     const { usuario, contraseña } = req.body;
 
@@ -98,7 +126,6 @@ app.post("/login", (req, res) => {
             req.session.usuario = resultados[0].usuario;
             req.session.usuario_id = resultados[0].id;
             req.session.nombre = resultados[0].nombre || resultados[0].usuario;
-
             return res.json({ success: true });
         } else {
             return res.status(401).json({ error: "Usuario o contraseña incorrectos." });
@@ -132,7 +159,7 @@ app.get("/api/usuario", requireLogin, (req, res) => {
     });
 });
 
-// Autos
+// Autos Nissan
 app.get("/api/autos", requireLogin, (req, res) => {
     res.json([
         {
@@ -226,6 +253,7 @@ app.get("/api/autos", requireLogin, (req, res) => {
     ]);
 });
 
+// Autos Honda
 app.get("/api/autos/honda", requireLogin, (req, res) => {
     res.json([
         {
@@ -307,5 +335,5 @@ app.post("/api/favoritos", requireLogin, (req, res) => {
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-    console.log(`🚗 Luxury Motors corriendo en puerto http://localhost:${PORT}`);
+    console.log(`Luxury Motors corriendo en http://localhost:${PORT}`);
 });
