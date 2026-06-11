@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const mysql = require("mysql2");
 const bodyParser = require("body-parser");
@@ -23,11 +25,11 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // CONEXIÓN MYSQL (RAILWAY)
 const db = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: process.env.DB_PORT
+    host: process.env.DB_HOST || acela.proxy.rlwy.net,
+    user: process.env.DB_USER || root,
+    password: process.env.DB_PASSWORD ||YuhsheihVudVjmtsRKscFCTuPuGKawTu,
+    database: process.env.DB_NAME ||railway,
+    port: process.env.DB_PORT ||12751
 });
 
 // Conectar DB
