@@ -95,7 +95,7 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "registro.html"));
 });
 
-app.get("/login", (req, res) => {
+app.get("/login1", (req, res) => {
     if (req.session.usuario) return res.redirect("/entrada");
     res.sendFile(path.join(__dirname, "public", "login1.html"));
 });
@@ -133,7 +133,7 @@ app.post("/registro", async (req, res) => {
 });
 
 // POST Login
-app.post("/login", (req, res) => {
+app.post("/login1", (req, res) => {
     const { usuario, contraseña } = req.body;
 
     if (!usuario || !contraseña) {
