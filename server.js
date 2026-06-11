@@ -25,11 +25,11 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // CONEXIÓN MYSQL (RAILWAY)
 const db = mysql.createConnection({
-    host: process.env.DB_HOST || acela.proxy.rlwy.net,
-    user: process.env.DB_USER || root,
-    password: process.env.DB_PASSWORD ||YuhsheihVudVjmtsRKscFCTuPuGKawTu,
-    database: process.env.DB_NAME ||railway,
-    port: process.env.DB_PORT ||12751
+    host: process.env.DB_HOST || "acela.proxy.rlwy.net",
+    user: process.env.DB_USER || "root",
+    password: process.env.DB_PASSWORD || "YuhsheihVudVjmtsRKscFCTuPuGKawTu",
+    database: process.env.DB_NAME || "railway",
+    port: process.env.DB_PORT || 12751
 });
 
 // Conectar DB
