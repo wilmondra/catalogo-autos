@@ -302,7 +302,7 @@ app.post("/api/favoritos", requireLogin, (req, res) => {
 });
 
 // Server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT ||acela.proxy.rlwy.net ;
 
 app.listen(PORT, () => {
     console.log(`🚗 Luxury Motors corriendo en puerto http://localhost:${PORT}`);
