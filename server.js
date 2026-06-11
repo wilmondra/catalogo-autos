@@ -1,6 +1,5 @@
 require("dotenv").config();
 const bcrypt = require("bcrypt");
-
 const express = require("express");
 const mysql = require("mysql2");
 const bodyParser = require("body-parser");
@@ -18,7 +17,7 @@ app.use(session({
     secret: "luxury_motors_secret_2026",
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 1000 * 60 * 60 } // 1 hora
+    cookie: { maxAge: 1000 * 60 * 60 }
 }));
 
 // Archivos estáticos
@@ -58,6 +57,18 @@ function crearTablas() {
     `);
 
     db.query(`
+        CREATE TABLE IF NOT EXISTS sesiones (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            usuario_id INT NOT NULL,
+            ip VARCHAR(45),
+            user_agent VARCHAR(255),
+            fecha_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            activa TINYINT(1) DEFAULT 1,
+            FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+        )
+    `);
+
+    db.query(`
         CREATE TABLE IF NOT EXISTS favoritos (
             id INT AUTO_INCREMENT PRIMARY KEY,
             usuario_id INT NOT NULL,
@@ -68,7 +79,7 @@ function crearTablas() {
     `);
 }
 
-// ── Middleware login ──
+// Middleware login
 function requireLogin(req, res, next) {
     if (req.session && req.session.usuario) {
         next();
@@ -79,13 +90,11 @@ function requireLogin(req, res, next) {
 
 // ── RUTAS ──
 
-// Página de inicio → Registro
 app.get("/", (req, res) => {
     if (req.session.usuario) return res.redirect("/entrada");
     res.sendFile(path.join(__dirname, "public", "registro.html"));
 });
 
-// Página de login
 app.get("/login", (req, res) => {
     if (req.session.usuario) return res.redirect("/entrada");
     res.sendFile(path.join(__dirname, "public", "login1.html"));
@@ -96,102 +105,82 @@ app.post("/registro", async (req, res) => {
     const { nombre, apellido, usuario, correo, contraseña } = req.body;
 
     if (!nombre || !apellido || !usuario || !correo || !contraseña) {
-        return res.status(400).json({
-            error: "Completa todos los campos."
-        });
+        return res.status(400).json({ error: "Completa todos los campos." });
     }
 
     try {
         const hash = await bcrypt.hash(contraseña, 10);
 
         const sql = `
-            INSERT INTO usuarios
-            (nombre, apellido, usuario, correo, contraseña)
+            INSERT INTO usuarios (nombre, apellido, usuario, correo, contraseña)
             VALUES (?, ?, ?, ?, ?)
         `;
 
-        db.query(
-            sql,
-            [nombre, apellido, usuario, correo, hash],
-            (error) => {
-                if (error) {
-                    if (error.code === "ER_DUP_ENTRY") {
-                        return res.status(409).json({
-                            error: "El usuario o correo ya está registrado."
-                        });
-                    }
-
-                    return res.status(500).json({
-                        error: "Error en el servidor."
-                    });
+        db.query(sql, [nombre, apellido, usuario, correo, hash], (error) => {
+            if (error) {
+                if (error.code === "ER_DUP_ENTRY") {
+                    return res.status(409).json({ error: "El usuario o correo ya está registrado." });
                 }
-
-                return res.json({
-                    success: true
-                });
+                return res.status(500).json({ error: "Error en el servidor." });
             }
-        );
+            return res.json({ success: true });
+        });
 
     } catch (error) {
         console.error(error);
-
-        return res.status(500).json({
-            error: "Error al procesar la contraseña."
-        });
+        return res.status(500).json({ error: "Error al procesar la contraseña." });
     }
 });
-    
+
 // POST Login
 app.post("/login", (req, res) => {
     const { usuario, contraseña } = req.body;
 
     if (!usuario || !contraseña) {
-        return res.status(400).json({
-            error: "Completa todos los campos."
-        });
+        return res.status(400).json({ error: "Completa todos los campos." });
     }
 
     const sql = "SELECT * FROM usuarios WHERE usuario = ?";
 
     db.query(sql, [usuario], async (error, resultados) => {
-
-        if (error) {
-            return res.status(500).json({
-                error: "Error servidor"
-            });
-        }
+        if (error) return res.status(500).json({ error: "Error servidor" });
 
         if (resultados.length === 0) {
-            return res.status(401).json({
-                error: "Usuario o contraseña incorrectos."
-            });
+            return res.status(401).json({ error: "Usuario o contraseña incorrectos." });
         }
 
         const usuarioDB = resultados[0];
-
-        const coincide = await bcrypt.compare(
-            contraseña,
-            usuarioDB.contraseña
-        );
+        const coincide = await bcrypt.compare(contraseña, usuarioDB.contraseña);
 
         if (!coincide) {
-            return res.status(401).json({
-                error: "Usuario o contraseña incorrectos."
-            });
+            return res.status(401).json({ error: "Usuario o contraseña incorrectos." });
         }
+
+        // Registrar sesión en tabla
+        const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+        const userAgent = req.headers["user-agent"] || "";
+        db.query(
+            "INSERT INTO sesiones (usuario_id, ip, user_agent) VALUES (?, ?, ?)",
+            [usuarioDB.id, ip, userAgent]
+        );
 
         req.session.usuario = usuarioDB.usuario;
         req.session.usuario_id = usuarioDB.id;
         req.session.nombre = usuarioDB.nombre || usuarioDB.usuario;
 
-        return res.json({
-            success: true
-        });
+        return res.json({ success: true });
     });
 });
 
 // Logout
 app.get("/logout", (req, res) => {
+    // Marcar sesión como inactiva
+    if (req.session.usuario_id) {
+        db.query(
+            "UPDATE sesiones SET activa = 0 WHERE usuario_id = ? AND activa = 1",
+            [req.session.usuario_id]
+        );
+    }
     req.session.destroy(() => res.redirect("/"));
 });
 
@@ -219,144 +208,24 @@ app.get("/api/usuario", requireLogin, (req, res) => {
 // Autos Nissan
 app.get("/api/autos", requireLogin, (req, res) => {
     res.json([
-        {
-            id: "gtr_r35",
-            nombre: "Nissan GT-R R35",
-            categoria: "Superdeportivo",
-            descripcion: "El Godzilla moderno de Nissan.",
-            potencia: "565 HP",
-            velocidad: "315 km/h",
-            año: "2024",
-            motor: "3.8L V6 Twin Turbo",
-            img: "/img/Nissan GTR R35.jpeg "
-        },
-        {
-            id: "gtr_r34",
-            nombre: "Nissan Skyline GT-R R34",
-            categoria: "JDM Legend",
-            descripcion: "Uno de los deportivos japoneses más icónicos.",
-            potencia: "280 HP",
-            velocidad: "266 km/h",
-            año: "2002",
-            motor: "RB26DETT",
-            img: "/img/Nissan GTR R34.jpeg "
-        },
-        {
-            id: "gtr_r33",
-            nombre: "Nissan Skyline GT-R R33",
-            categoria: "JDM Legend",
-            descripcion: "Potencia y tecnología AWD japonesa.",
-            potencia: "280 HP",
-            velocidad: "252 km/h",
-            año: "1998",
-            motor: "RB26DETT",
-            img: "/img/Nissan GTR R33.jpeg "
-        },
-        {
-            id: "gtr_r32",
-            nombre: "Nissan Skyline GT-R R32",
-            categoria: "JDM Classic",
-            descripcion: "El auto que inició la leyenda Godzilla.",
-            potencia: "280 HP",
-            velocidad: "250 km/h",
-            año: "1994",
-            motor: "RB26DETT",
-            img: "/img/Nissan GTR R32.jpeg"
-        },
-        {
-            id: "400z",
-            nombre: "Nissan Z (2023)",
-            categoria: "Deportivo",
-            descripcion: "La nueva generación de la serie Z.",
-            potencia: "400 HP",
-            velocidad: "250 km/h",
-            año: "2023",
-            motor: "3.0L Twin Turbo V6",
-            img: "/img/Nissan Z (2023).jpeg "
-        },
-        {
-            id: "370z",
-            nombre: "Nissan 370Z",
-            categoria: "Deportivo",
-            descripcion: "Potencia y diversión en estado puro.",
-            potencia: "332 HP",
-            velocidad: "250 km/h",
-            año: "2020",
-            motor: "3.7L V6",
-            img: "/img/Nissan 370Z.jpeg"
-        },
-        {
-            id: "350z",
-            nombre: "Nissan 350Z",
-            categoria: "Deportivo",
-            descripcion: "Uno de los deportivos más populares de Nissan.",
-            potencia: "306 HP",
-            velocidad: "250 km/h",
-            año: "2008",
-            motor: "3.5L V6",
-            img: "/img/Nissan 350Z.jpeg"
-        },
-        {
-            id: "silvia_s15",
-            nombre: "Nissan Silvia S15",
-            categoria: "JDM Drift",
-            descripcion: "Leyenda japonesa del drift.",
-            potencia: "250 HP",
-            velocidad: "245 km/h",
-            año: "2002",
-            motor: "SR20DET",
-            img: "/img/Nissan Silvia 15.jpeg"
-        }
+        { id: "gtr_r35", nombre: "Nissan GT-R R35", categoria: "Superdeportivo", descripcion: "El Godzilla moderno de Nissan.", potencia: "565 HP", velocidad: "315 km/h", año: "2024", motor: "3.8L V6 Twin Turbo", img: "/img/Nissan GTR R35.jpeg" },
+        { id: "gtr_r34", nombre: "Nissan Skyline GT-R R34", categoria: "JDM Legend", descripcion: "Uno de los deportivos japoneses más icónicos.", potencia: "280 HP", velocidad: "266 km/h", año: "2002", motor: "RB26DETT", img: "/img/Nissan GTR R34.jpeg" },
+        { id: "gtr_r33", nombre: "Nissan Skyline GT-R R33", categoria: "JDM Legend", descripcion: "Potencia y tecnología AWD japonesa.", potencia: "280 HP", velocidad: "252 km/h", año: "1998", motor: "RB26DETT", img: "/img/Nissan GTR R33.jpeg" },
+        { id: "gtr_r32", nombre: "Nissan Skyline GT-R R32", categoria: "JDM Classic", descripcion: "El auto que inició la leyenda Godzilla.", potencia: "280 HP", velocidad: "250 km/h", año: "1994", motor: "RB26DETT", img: "/img/Nissan GTR R32.jpeg" },
+        { id: "400z", nombre: "Nissan Z (2023)", categoria: "Deportivo", descripcion: "La nueva generación de la serie Z.", potencia: "400 HP", velocidad: "250 km/h", año: "2023", motor: "3.0L Twin Turbo V6", img: "/img/Nissan Z (2023).jpeg" },
+        { id: "370z", nombre: "Nissan 370Z", categoria: "Deportivo", descripcion: "Potencia y diversión en estado puro.", potencia: "332 HP", velocidad: "250 km/h", año: "2020", motor: "3.7L V6", img: "/img/Nissan 370Z.jpeg" },
+        { id: "350z", nombre: "Nissan 350Z", categoria: "Deportivo", descripcion: "Uno de los deportivos más populares de Nissan.", potencia: "306 HP", velocidad: "250 km/h", año: "2008", motor: "3.5L V6", img: "/img/Nissan 350Z.jpeg" },
+        { id: "silvia_s15", nombre: "Nissan Silvia S15", categoria: "JDM Drift", descripcion: "Leyenda japonesa del drift.", potencia: "250 HP", velocidad: "245 km/h", año: "2002", motor: "SR20DET", img: "/img/Nissan Silvia 15.jpeg" }
     ]);
 });
 
 // Autos Honda
 app.get("/api/autos/honda", requireLogin, (req, res) => {
     res.json([
-        {
-            id: "nsx",
-            nombre: "Honda NSX",
-            categoria: "Superdeportivo",
-            descripcion: "El legendario superdeportivo japonés desarrollado con tecnología VTEC.",
-            potencia: "270 HP",
-            velocidad: "270 km/h",
-            año: "1990",
-            motor: "3.0L V6 VTEC",
-            img: "/img/Honda NSX.jpeg "
-        },
-        {
-            id: "civic_type_r",
-            nombre: "Honda Civic Type R",
-            categoria: "Type R",
-            descripcion: "Uno de los hatchbacks de tracción delantera más rápidos del mundo.",
-            potencia: "315 HP",
-            velocidad: "275 km/h",
-            año: "2023",
-            motor: "2.0L Turbo VTEC",
-            img: "/img/Honda Civic Type R.jpeg "
-        },
-        {
-            id: "s2000",
-            nombre: "Honda S2000",
-            categoria: "Roadster",
-            descripcion: "Deportivo de alto rendimiento con motor F20C y tecnología VTEC.",
-            potencia: "240 HP",
-            velocidad: "250 km/h",
-            año: "2008",
-            motor: "2.0L F20C",
-            img: "/img/Honda S2000.jpeg"
-        },
-        {
-            id: "integra_type_r",
-            nombre: "Honda Integra Type R",
-            categoria: "Type R",
-            descripcion: "Uno de los deportivos compactos más icónicos de Honda.",
-            potencia: "197 HP",
-            velocidad: "233 km/h",
-            año: "2001",
-            motor: "1.8L VTEC",
-            img: "/img/Honda Integra Type R.jpeg"
-        }
+        { id: "nsx", nombre: "Honda NSX", categoria: "Superdeportivo", descripcion: "El legendario superdeportivo japonés desarrollado con tecnología VTEC.", potencia: "270 HP", velocidad: "270 km/h", año: "1990", motor: "3.0L V6 VTEC", img: "/img/Honda NSX.jpeg" },
+        { id: "civic_type_r", nombre: "Honda Civic Type R", categoria: "Type R", descripcion: "Uno de los hatchbacks de tracción delantera más rápidos del mundo.", potencia: "315 HP", velocidad: "275 km/h", año: "2023", motor: "2.0L Turbo VTEC", img: "/img/Honda Civic Type R.jpeg" },
+        { id: "s2000", nombre: "Honda S2000", categoria: "Roadster", descripcion: "Deportivo de alto rendimiento con motor F20C y tecnología VTEC.", potencia: "240 HP", velocidad: "250 km/h", año: "2008", motor: "2.0L F20C", img: "/img/Honda S2000.jpeg" },
+        { id: "integra_type_r", nombre: "Honda Integra Type R", categoria: "Type R", descripcion: "Uno de los deportivos compactos más icónicos de Honda.", potencia: "197 HP", velocidad: "233 km/h", año: "2001", motor: "1.8L VTEC", img: "/img/Honda Integra Type R.jpeg" }
     ]);
 });
 
