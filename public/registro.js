@@ -78,7 +78,7 @@ async function registrar() {
             successDiv.textContent = "¡Cuenta creada exitosamente! Redirigiendo...";
             successDiv.style.display = "block";
             btn.textContent = "¡Listo!";
-            setTimeout(() => { window.location.href = "/login"; }, 2000);
+            setTimeout(() => {window.location.href = "login.html";; }, 2000);
         } else {
             mostrarError(data.error || "Error al crear la cuenta. Intenta de nuevo.");
             btn.textContent = "Crear Cuenta";
